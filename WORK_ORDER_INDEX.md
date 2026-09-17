@@ -35,7 +35,7 @@
 | 2 | Data Engine | §36～§41、§46～§48 | `UNKNOWN` | COLLECT→…→pipeline 實跑紀錄、Crawl Resilience、Anti-Cascade 實測 |
 | 3 | Evidence | §37、§38、§40、§42～§45 | `UNKNOWN` | Official Source Registry、Snapshot/Hash/Diff、Confidence、穩定 `fact_id`、Evidence Durability |
 | 4 | AMPM Standard | §64、§92 | `UNKNOWN` | 公開 Standard / Transparency 頁、Badge 與 Verification 機制 |
-| 5 | Market Intelligence | §22～§28 | `UNKNOWN` | Category Heat V1、Competition Index V1、Seat Allocation、Stability Guard、Non-Eviction |
+| 5 | Market Intelligence | §22～§28、§65、§66 | `UNKNOWN` | Category Heat V1、Competition Index V1、Seat Allocation、Stability Guard、Non-Eviction、Challenger 資格、ENTER / DROP 為市場事件且 `ENTER + COMPETITIVE_DROP` 必須 atomic（不得出現 Active=101） |
 | 6 | Founding 100 | §29～§35 | `UNKNOWN` | Founding Selection 實跑、Lifecycle、Grace/Revalidation、Watchlist、Museum |
 | 7 | AMPM100 UI | §3～§9、§12～§21 | `UNKNOWN` | 兩層 Category、Generalist/Specialist、Capability Badge、Score V1 五維、Tie-break、Coverage 門檻 |
 | 8 | Radar | §49～§56 | `UNKNOWN` | Radar Event Flow 串起 News / Column / 貓日報之內容鏈 |
@@ -48,6 +48,14 @@
 | 15 | Final Regression | §100 | `UNKNOWN` | 對 §100 全部 8 項已修問題之回歸測試 |
 | 16 | **Production Deploy** | §95 | `MISSING_REQUIRED` | **永不自動 PASS。** 必須 Owner 當下明確批准，且走 `/root/deploy_guard.sh` |
 | 17 | Post-launch Observation | §84、§87、§88 | `UNKNOWN` | 上線後 SEO 觀察、Worker 掛掉時之行為驗證 |
+
+## 未對應到單一 Gate 的節次
+
+以下 9 節不是某一 Gate 的施工規格，而是定位、對照或總則，全 Gate 均受其約束，故不列入上表：
+
+§1（AMPM 最後要變成什麼）、§94（Gate 順序本身）、§102（AdSense 與產品價值的關係）、§103（最終使用者應該感受到什麼）、§104（整套策略最終關係）、§105（最終原則）、§106（這次策略沒有包含的事情）。
+
+覆蓋盤點：策略記錄共 108 節（§0～§107），上表與本節合計覆蓋 108 節，無遺漏。
 
 ## 橫跨全 Gate 的兩條線（非獨立 Gate）
 
@@ -85,6 +93,16 @@
 
 ## 驗證阻斷紀錄
 
-本索引由雲端隔離容器產出。該容器**無法**存取：`/root/開工儀式.md`、`/opt/ampm/heiyao/AMPM-AIOPS/ampm-site`、正式工單檔案、VPS 上任何施工產出。
-已核對之 GitHub 範圍：`chainuncel/AMPM-AI`（全分支全歷史，僅 2 個 md 檔、0 Issue、0 PR）、`chainuncel/OTTO`（空庫）、`chainuncel/chainuncel.github.io`（僅 `index.html`，與 AMPM 無關）。
-因此本檔只能索引「已定規格」，不能代替施工驗收。
+本索引由雲端隔離容器產出，非 VPS。已逐項實測確認**無法**取得施工證據：
+
+| 標的 | 方法 | 結果 |
+| --- | --- | --- |
+| `/root/開工儀式.md`（治理正本） | `ls` | 不存在於本容器 |
+| `/opt/ampm/heiyao/AMPM-AIOPS/ampm-site`（施工標的） | `ls` | 不存在於本容器 |
+| `AMPM_FINAL_MASTER_TRANSFORMATION_WORK_ORDER_20260819_DRAFT.md`（正式工單） | 全 repo 全歷史搜尋 | 不在任何可及 repo |
+| https://ampm-aiops.com （正式網站） | `curl` 與 WebFetch | 被網路 egress policy 封鎖（CONNECT 403 / EGRESS_BLOCKED），無法取得線上實況 |
+| `chainuncel/AMPM-AI` | 全分支、全 commit `ls-tree`；Issues / PR API | 僅 md 檔，無程式碼；0 Issue、0 PR |
+| `chainuncel/OTTO` | clone 後全庫搜尋 | 空庫（僅 2 行 README） |
+| `chainuncel/chainuncel.github.io` | clone 後全文搜尋 | 僅 `index.html`，未提及 AMPM |
+
+因此本檔只能索引「已定規格」，不能代替施工驗收。任何 Gate 要改標 `PASS`，必須附上 VPS 上的實測證據。
