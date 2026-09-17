@@ -91,6 +91,47 @@
 
 直到系統能真正回答：為什麼它進 AMPM100？依據什麼？同 Category 為什麼排這裡？最近發生什麼？這個 Battle 為什麼這樣判？證據在哪裡？
 
+## 已確認的施工環境事實
+
+以下為 VPS 終端機實際輸出所確認，非推測：
+
+| 項目 | 值 |
+| --- | --- |
+| 施工主機 | `AMPM-AIOPS`（VPS） |
+| 施工目錄 | `/opt/ampm/heiyao/AMPM-AIOPS/ampm-site` |
+| 程式碼 repo | `github.com/chainuncel0712/ampm-site`（**私有**，與本倉庫 `chainuncel/AMPM-AI` 分屬不同 GitHub 帳號） |
+| 工作分支 | `main` |
+| 上線方式 | `deploy_guard` + wrangler。**`[flag-deploy]` commit 只是備份 commit，不等於上線**（commit message 自述） |
+| 資料快照 | 每日自動 commit，單日規模約 1577 檔（例：`auto-data: 每日資料快照 2026-09-16`，註記 `WO-20260827-002#9`） |
+
+### commit 紀錄中出現過的工單（12 張）
+
+| # | 工單編號 | 已知關聯 |
+| --- | --- | --- |
+| 1 | `WO-20260826-003` | — |
+| 2 | `WO-20260826-012` | — |
+| 3 | `WO-20260827-002` | 每日資料快照自動 commit（`#9`） |
+| 4 | `WO-20260827-005` | — |
+| 5 | `WO-20260827-011` | — |
+| 6 | `WO-20260827-023` | — |
+| 7 | `WO-20260830-001` | — |
+| 8 | `WO-20260905-011` | — |
+| 9 | `WO-20260906-011` | — |
+| 10 | `WO-20260916-004` | `[flag-deploy]` batch `20260916_232001` |
+| 11 | `WO-20260917-003` | `[flag-deploy]` batch `20260917_022001` |
+| 12 | `WO-20260917-005` | — |
+
+**這 12 張只是「有留下 commit」的工單，不是工單全集。** 未動到程式碼、或已開立未施工的工單不會出現在 git log 裡。完整清單須在 VPS 上以下列方式取得：
+
+```
+find /opt/ampm /root -maxdepth 4 -iname "*WORK_ORDER*"
+find /opt/ampm /root -maxdepth 4 -iname "*WO-2026*"
+```
+
+### 相關歷史 session
+
+`Gate 0.5 資料正確性修正`（2026-08-19，分支 `claude/gate-0-5-data-fixes-nm0vsr`，狀態 FAILED）—— Gate 0.5 施工殘留，接手時應一併查核。
+
 ## 驗證阻斷紀錄
 
 本索引由雲端隔離容器產出，非 VPS。已逐項實測確認**無法**取得施工證據：
